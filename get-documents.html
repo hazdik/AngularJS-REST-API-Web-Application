@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Get Documents
+        </title>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1" name="viewport"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.11/angular.min.js"></script>
+        <link href="css/bootstrap-3.3.7.min.css" rel="stylesheet"/>
+        <script src="js/jquery-3.2.1.min.js"></script>
+        <script src="js/bootstrap-3.3.7.min.js"></script>
+        <style>
+            .btn-danger:active, .btn-danger {
+                    background-color: #c9302c;
+                }
+                .top-row-btn{
+                    margin-bottom: 20px;
+                }
+                body{
+                    background-color: #fff;
+                }
+                .del-modal-txt{
+                    margin-left: 15px;
+                }
+                .validations{
+                    color: red;
+                }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <nav class="navbar navbar-default navbar-static-top">
+                <div class="container">
+                    <div class="navbar-header">
+                        <!-- Collapsed Hamburger -->
+                        <button class="navbar-toggle collapsed" data-target="#app-navbar-collapse" data-toggle="collapse" type="button">
+                            <span class="sr-only">
+                                Toggle Navigation
+                            </span>
+                            <span class="icon-bar">
+                            </span>
+                            <span class="icon-bar">
+                            </span>
+                            <span class="icon-bar">
+                            </span>
+                        </button>
+                    </div>
+                    <div class="collapse navbar-collapse" id="app-navbar-collapse">
+                        <!-- Left Side Of Navbar -->
+                        <ul class="nav navbar-nav">
+                        </ul>
+                        <!-- Right Side Of Navbar -->
+                        <ul class="nav navbar-nav navbar-right">
+                            <!-- Authentication Links -->
+                            <li class="logout hidden">
+                                <a href="get-documents.html" onclick="localStorage.removeItem('access_token')">
+                                    Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div class="container" ng-app="myApp" ng-controller="myCtrl" ng-init="load()">
+                <div class="top-row-btn">
+                    <a class="btn btn-primary pull-right create-document" href="details.html">
+                        Create Document
+                    </a>
+                    <a class="btn btn-default pull-left register" data-target="#registerModal" data-toggle="modal">
+                        Register User
+                    </a>
+                </div>
+                <div class="col-md-12" style="margin-top: 15px;">
+                    <span class="all-error validations">
+                    </span>
+                    <p>
+                        <span class="firstname-error validations">
+                        </span>
+                    </p>
+                    <p>
+                        <span class="lastname-error validations">
+                        </span>
+                    </p>
+                    <p>
+                        <span class="username-error validations">
+                        </span>
+                    </p>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Description
+                            </th>
+                            <th>
+                                Image
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="documentTable">
+                        <tr class="document_{{item._id}}" ng-repeat="item in documents">
+                            <td class="document_title_{{item._id}}">
+                                <a href="details.html#?id={{ item._id }}">
+                                    {{item.name}}
+                                </a>
+                            </td>
+                            <td class="document_description_{{item._id}}">
+                                {{item.description}}
+                            </td>
+                            <td class="document_imgs_{{item._id}}">
+                                <img src="{{item.imgs[0].url}}" style="height: 100px;"/>
+                            </td>
+                            <td>
+                                <a class="btn btn-default edit-docuement" data-id="{{item._id}}" data-target="#editModal" data-toggle="modal" ng-click="getDocumentData()">
+                                    <span aria-hidden="true" class="glyphicon glyphicon-pencil">
+                                    </span>
+                                </a>
+                                <a class="btn btn-danger edit-docuement" data-id="{{item._id}}" data-target="#deleteModal" data-toggle="modal" ng-click="getDocumentData()">
+                                    <span aria-hidden="true" class="glyphicon glyphicon-trash">
+                                    </span>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="no-document">
+                            <td>
+                                No document available yet.
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="modal fade" id="editModal" role="dialog">
+                    <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button class="close" data-dismiss="modal" type="button">
+                                    ×
+                                </button>
+                                <h4 class="modal-title">
+                                    Edit : {{name}}
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <input ng-model="document_id" type="hidden" value="{{document_id}}"/>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label class="control-label pull-right" for="editName">
+                                                    Name *
+                                                </label>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <input class="form-control input-md" id="editName" name="editName" ng-model="editName" required="" type="text" value="{{name}}">
+                                                </input>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label class="control-label pull-right" for="description">
+                                                    Description *
+                                                </label>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <input class="form-control input-md" id="description" name="description" ng-model="editDescription" required="" type="text" value="{{editDescription}}">
+                                                </input>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label class="control-label pull-right" for="imgs">
+                                                    Image URL *
+                                                </label>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <input class="form-control input-md" id="imgs" name="imgs" ng-model="editImgs" required="" type="text" value="{{editImgs}}">
+                                                </input>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <a class="btn btn-primary" data-dismiss="modal" ng-click="updateDocument()">
+                                    Update
+                                </a>
+                                <button class="btn btn-default" data-dismiss="modal" type="button">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="deleteModal" role="dialog">
+                    <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button class="close" data-dismiss="modal" type="button">
+                                    ×
+                                </button>
+                                <h4 class="modal-title">
+                                    Delete : {{editName}}
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <input ng-model="document_id" type="hidden" value="{{document_id}}"/>
+                                    <div class="row">
+                                        <p class="del-modal-txt">
+                                            Are you sure you want to delete?
+                                        </p>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <a class="btn btn-danger" data-dismiss="modal" ng-click="deleteDocument()">
+                                    Delete
+                                </a>
+                                <button class="btn btn-default" data-dismiss="modal" type="button">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="registerModal" role="dialog">
+                    <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <form class="form-horizontal" id="loginform" name="loginform">
+                                <div class="modal-body">
+                                    <fieldset>
+                                        <!-- Form Name -->
+                                        <legend>
+                                            Login Form
+                                        </legend>
+                                        <!-- Text input-->
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label" for="firstname">
+                                                First Name
+                                            </label>
+                                            <div class="col-md-6">
+                                                <input class="form-control input-md" id="firstname" name="firstname" ng-model="firstname" placeholder="" required="" type="text"/>
+                                            </div>
+                                            <span class="title-error validations">
+                                            </span>
+                                        </div>
+                                        <!-- Last Name-->
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label" for="lastname">
+                                                Last Name
+                                            </label>
+                                            <div class="col-md-6">
+                                                <input class="form-control input-md" id="lastname" name="lastname" ng-model="lastname" placeholder="" required="" type="text"/>
+                                            </div>
+                                        </div>
+                                        <!-- Password input-->
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label" for="username">
+                                                User Name
+                                            </label>
+                                            <div class="col-md-6">
+                                                <input class="form-control input-md" id="username" name="username" ng-model="username" placeholder="" required="" type="text"/>
+                                            </div>
+                                        </div>
+                                        <!-- Button -->
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label" for="loginBtn">
+                                            </label>
+                                            <div class="col-md-6">
+                                                <a class="btn btn-primary" data-dismiss="modal" id="loginBtn" ng-click="userRegister()">
+                                                    Register
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <script src="service.js">
+                
+            </script>
+        </div>
+    </body>
+</html>

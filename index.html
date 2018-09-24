@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            ApiApp
+        </title>
+        <meta charset="utf-8">
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.11/angular.min.js">
+            </script>
+            <meta content="width=device-width, initial-scale=1" name="viewport">
+                <link href="css/bootstrap-3.3.7.min.css" rel="stylesheet">
+                    <script src="js/jquery-3.2.1.min.js">
+                    </script>
+                    <script src="js/bootstrap-3.3.7.min.js">
+                    </script>
+                </link>
+            </meta>
+        </meta>
+    </head>
+    <body>
+        <div id="app">
+            <nav class="navbar navbar-default navbar-static-top">
+                <div class="container">
+                    <div class="navbar-header">
+                        <!-- Collapsed Hamburger -->
+                        <button class="navbar-toggle collapsed" data-target="#app-navbar-collapse" data-toggle="collapse" type="button">
+                            <span class="sr-only">
+                                Toggle Navigation
+                            </span>
+                            <span class="icon-bar">
+                            </span>
+                            <span class="icon-bar">
+                            </span>
+                            <span class="icon-bar">
+                            </span>
+                        </button>
+                    </div>
+                    <div class="collapse navbar-collapse" id="app-navbar-collapse">
+                        <!-- Left Side Of Navbar -->
+                        <ul class="nav navbar-nav">
+                        </ul>
+                        <!-- Right Side Of Navbar -->
+                        <ul class="nav navbar-nav navbar-right">
+                            <!-- Authentication Links -->
+                            <li>
+                                <a href="/user/logout" onclick="localStorage.removeItem('access_token')">
+                                    Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <style>
+	            .validations{
+				    color: red;
+				}
+            </style>
+            <div class="container" ng-app="myApp" ng-controller="myCtrl">
+                <form class="form-horizontal" id="loginform" name="loginform">
+                    <fieldset>
+                        <!-- Form Name -->
+                        <legend>
+                            Login Form
+                        </legend>
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="firstname">
+                                First Name
+                            </label>
+                            <div class="col-md-4">
+                                <input class="form-control input-md" id="firstname" name="firstname" ng-model="firstname" placeholder="" required="" type="text"/>
+                            </div>
+                            <span class="title-error validations">
+                            </span>
+                        </div>
+                        <!-- Last Name-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="lastname">
+                                Last Name
+                            </label>
+                            <div class="col-md-4">
+                                <input class="form-control input-md" id="lastname" name="lastname" ng-model="lastname" placeholder="" required="" type="text"/>
+                            </div>
+                        </div>
+                        <!-- Password input
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="username">
+                                User Name
+                            </label>
+                            <div class="col-md-4">
+                                <input class="form-control input-md" id="username" name="username" ng-model="username" placeholder="" required="" type="text"/>
+                            </div>
+                        </div> -->
+                        <!-- Button -->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="loginBtn">
+                            </label>
+                            <div class="col-md-4">
+                                <a class="btn btn-primary" id="loginBtn" ng-click="userLogin()">
+                                    Login
+                                </a>
+                                <!-- <span>
+                                    New User ?
+                                    <a href="/register">
+                                        Sign Up
+                                    </a>
+                                </span> -->
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <script src="service.js">
+                
+            </script>
+        </div>
+    </body>
+</html>
